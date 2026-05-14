@@ -9,25 +9,12 @@ const STATUS = {
 }
 
 const CATS = [
-  'Acessórios para Veículos',
-  'Agro',
-  'Antiguidades e Coleções',
-  'Bebês',
-  'Beleza e Cuidado Pessoal',
-  'Brinquedos e Hobbies',
-  'Calçados, Roupas e Bolsas',
-  'Casa, Móveis e Decoração',
-  'Celulares e Telefones',
-  'Construção',
-  'Câmeras e Acessórios',
-  'Eletrodomésticos',
-  'Eletrônicos, Áudio e Vídeo',
-  'Esportes e Fitness',
-  'Ferramentas',
-  'Festas e Lembrancinhas',
-  'Indústria e Comércio',
-  'Informática',
-  'Saúde',
+  'Acessórios para Veículos', 'Agro', 'Antiguidades e Coleções', 'Bebês',
+  'Beleza e Cuidado Pessoal', 'Brinquedos e Hobbies', 'Calçados, Roupas e Bolsas',
+  'Casa, Móveis e Decoração', 'Celulares e Telefones', 'Construção',
+  'Câmeras e Acessórios', 'Eletrodomésticos', 'Eletrônicos, Áudio e Vídeo',
+  'Esportes e Fitness', 'Ferramentas', 'Festas e Lembrancinhas',
+  'Indústria e Comércio', 'Informática', 'Saúde',
 ]
 
 const blank = {
@@ -91,32 +78,21 @@ function Form({ product, onSave, onCancel, saving }) {
     setUploading(true)
     const ext = file.name.split('.').pop()
     const fileName = `${f.sku || Date.now()}_${Date.now()}.${ext}`
-    const { data, error } = await supabase.storage
-      .from('produto-fotos')
-      .upload(fileName, file, { upsert: true })
-    if (error) {
-      alert('Erro no upload: ' + error.message)
-      setUploading(false)
-      return
-    }
-    const { data: urlData } = supabase.storage
-      .from('produto-fotos')
-      .getPublicUrl(fileName)
+    const { error } = await supabase.storage.from('produto-fotos').upload(fileName, file, { upsert: true })
+    if (error) { alert('Erro no upload: ' + error.message); setUploading(false); return }
+    const { data: urlData } = supabase.storage.from('produto-fotos').getPublicUrl(fileName)
     set('foto_url', urlData.publicUrl)
     setUploading(false)
   }
 
-  const removeFoto = () => {
-    set('foto_url', '')
-    if (fileRef.current) fileRef.current.value = ''
-  }
+  const removeFoto = () => { set('foto_url', ''); if (fileRef.current) fileRef.current.value = '' }
 
   return (
-    <div className="card" style={{ padding: 24 }}>
-      <h2 style={{ fontSize: 17, fontWeight: 500, marginBottom: 18 }}>
+    <div className="card" style={{ padding: 20, maxWidth: 680, margin: '0 auto' }}>
+      <h2 style={{ fontSize: 16, fontWeight: 500, marginBottom: 16 }}>
         {product?.id ? 'Editar produto' : 'Cadastrar produto'}
       </h2>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         <div className="grid-2">
           <div><label className="label">SKU *</label><input value={f.sku} onChange={e => set('sku', e.target.value)} placeholder="Ex: LattafaAsad" /></div>
           <div><label className="label">Nome do produto *</label><input value={f.nome} onChange={e => set('nome', e.target.value)} placeholder="Nome completo" /></div>
@@ -137,8 +113,8 @@ function Form({ product, onSave, onCancel, saving }) {
         </div>
         {parseFloat(f.custo) > 0 && (
           <div className={`margin-hint ${mgClass}`}>
-            <span>Preço sugerido (margem 20%): <strong>R$ {sug}</strong></span>
-            <span>Margem atual: <strong style={{ color: mgColor }}>{mg}%</strong></span>
+            <span>Sugerido (20%): <strong>R$ {sug}</strong></span>
+            <span>Margem: <strong style={{ color: mgColor }}>{mg}%</strong></span>
           </div>
         )}
         <div className="grid-3">
@@ -165,74 +141,48 @@ function Form({ product, onSave, onCancel, saving }) {
           </div>
         </div>
 
-        {/* FOTO: Upload ou URL */}
         <div>
           <label className="label">Foto do produto</label>
           {f.foto_url ? (
-            <div style={{ display: 'flex', gap: 12, alignItems: 'center', padding: 12, background: 'var(--bg3)', borderRadius: 8 }}>
-              <img src={f.foto_url} alt="Preview"
-                onError={e => e.target.src = ''}
-                style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--border)' }} />
-              <div style={{ flex: 1 }}>
-                <p style={{ fontSize: 12, color: 'var(--text2)', margin: '0 0 8px', wordBreak: 'break-all' }}>
-                  {f.foto_url.length > 60 ? f.foto_url.slice(0, 60) + '...' : f.foto_url}
-                </p>
-                <button className="btn btn-secondary btn-sm" onClick={removeFoto}
-                  style={{ color: 'var(--red)', borderColor: 'var(--red)' }}>
-                  🗑️ Remover foto
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center', padding: 10, background: 'var(--bg3)', borderRadius: 6 }}>
+              <img src={f.foto_url} alt="Preview" onError={e => e.target.src = ''}
+                style={{ width: 70, height: 70, objectFit: 'cover', borderRadius: 6, border: '1px solid var(--border)' }} />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize: 11, color: 'var(--text3)', margin: '0 0 6px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.foto_url}</p>
+                <button className="btn btn-sm" onClick={removeFoto}
+                  style={{ color: 'var(--red)', background: 'var(--red-bg)', border: 'none', fontSize: 11 }}>
+                  Remover
                 </button>
               </div>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <div style={{
-                border: '2px dashed var(--border)', borderRadius: 8, padding: 20,
-                textAlign: 'center', cursor: 'pointer', background: 'var(--bg3)',
-                transition: 'border-color 0.2s',
-              }}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <div style={{ border: '1.5px dashed var(--border)', borderRadius: 6, padding: 16, textAlign: 'center', cursor: 'pointer', background: 'var(--bg3)' }}
                 onClick={() => fileRef.current?.click()}
                 onDragOver={e => { e.preventDefault(); e.currentTarget.style.borderColor = 'var(--green)' }}
-                onDragLeave={e => { e.currentTarget.style.borderColor = 'var(--border)' }}
-                onDrop={e => {
-                  e.preventDefault()
-                  e.currentTarget.style.borderColor = 'var(--border)'
-                  if (e.dataTransfer.files?.[0]) {
-                    const dt = new DataTransfer()
-                    dt.items.add(e.dataTransfer.files[0])
-                    fileRef.current.files = dt.files
-                    uploadFoto({ target: { files: [e.dataTransfer.files[0]] } })
-                  }
-                }}
-              >
-                {uploading ? (
-                  <p style={{ fontSize: 13, color: 'var(--text2)', margin: 0 }}>⏳ Enviando foto...</p>
-                ) : (
-                  <>
-                    <p style={{ fontSize: 24, margin: '0 0 4px' }}>📷</p>
-                    <p style={{ fontSize: 13, color: 'var(--text2)', margin: 0 }}>
-                      Clique ou arraste uma foto aqui
-                    </p>
-                    <p style={{ fontSize: 11, color: 'var(--text3)', margin: '4px 0 0' }}>
-                      JPG, PNG ou WEBP
-                    </p>
-                  </>
-                )}
+                onDragLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+                onDrop={e => { e.preventDefault(); e.currentTarget.style.borderColor = 'var(--border)'; if (e.dataTransfer.files?.[0]) uploadFoto({ target: { files: [e.dataTransfer.files[0]] } }) }}>
+                {uploading
+                  ? <p style={{ fontSize: 12, color: 'var(--text2)', margin: 0 }}>Enviando...</p>
+                  : <>
+                      <p style={{ fontSize: 12, color: 'var(--text2)', margin: 0 }}>📷 Clique ou arraste uma foto</p>
+                      <p style={{ fontSize: 10, color: 'var(--text3)', margin: '2px 0 0' }}>JPG, PNG, WEBP</p>
+                    </>
+                }
               </div>
-              <input ref={fileRef} type="file" accept="image/*" onChange={uploadFoto}
-                style={{ display: 'none' }} />
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <input ref={fileRef} type="file" accept="image/*" onChange={uploadFoto} style={{ display: 'none' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-                <span style={{ fontSize: 11, color: 'var(--text3)' }}>ou cole uma URL</span>
+                <span style={{ fontSize: 10, color: 'var(--text3)' }}>ou URL</span>
                 <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
               </div>
-              <input value={f.foto_url} onChange={e => set('foto_url', e.target.value)}
-                placeholder="https://exemplo.com/foto.jpg" />
+              <input value={f.foto_url} onChange={e => set('foto_url', e.target.value)} placeholder="https://..." />
             </div>
           )}
         </div>
 
         <div><label className="label">Notas</label><textarea value={f.notas} onChange={e => set('notas', e.target.value)} placeholder="Observações..." rows={2} /></div>
-        <div className="flex gap-2" style={{ justifyContent: 'flex-end', marginTop: 4 }}>
+        <div className="flex gap-2" style={{ justifyContent: 'flex-end', marginTop: 2 }}>
           <button className="btn btn-secondary" onClick={onCancel}>Cancelar</button>
           <button className="btn btn-primary" onClick={() => onSave(f)} disabled={!f.sku || !f.nome || saving || uploading}>
             {saving ? 'Salvando...' : product?.id ? 'Atualizar' : 'Cadastrar'}
@@ -249,48 +199,50 @@ function Card({ product, onEdit, onDelete }) {
   const mgColor = parseFloat(mg) >= 15 ? '#0F6E56' : parseFloat(mg) >= 5 ? '#854F0B' : '#A32D2D'
 
   return (
-    <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 0, overflow: 'hidden' }}>
       {product.foto_url ? (
         <img src={product.foto_url} alt={product.nome}
           onError={e => e.target.style.display = 'none'}
-          style={{ width: '100%', height: 160, objectFit: 'cover', borderRadius: 8, background: 'var(--bg3)' }} />
+          style={{ width: '100%', height: 120, objectFit: 'cover', background: 'var(--bg3)' }} />
       ) : (
-        <div style={{ width: '100%', height: 80, borderRadius: 8, background: 'var(--bg3)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, color: 'var(--text3)' }}>
+        <div style={{ width: '100%', height: 50, background: 'var(--bg3)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, color: 'var(--text3)' }}>
           📦
         </div>
       )}
-      <div className="flex" style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div className="flex gap-2 items-center" style={{ marginBottom: 4 }}>
-            <span className="badge" style={{ background: st.bg, color: st.color }}>{st.label}</span>
-            <span style={{ fontSize: 11, color: 'var(--text3)' }}>Lote {product.lote}</span>
+      <div style={{ padding: '0 12px 10px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <div className="flex" style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div className="flex gap-2 items-center" style={{ marginBottom: 3 }}>
+              <span className="badge" style={{ background: st.bg, color: st.color }}>{st.label}</span>
+              <span style={{ fontSize: 10, color: 'var(--text3)' }}>L{product.lote}</span>
+            </div>
+            <p className="product-name">{product.nome}</p>
+            <p className="product-sku">{product.sku}</p>
           </div>
-          <p className="product-name">{product.nome}</p>
-          <p className="product-sku">{product.sku}</p>
+          <div className="flex gap-2" style={{ flexShrink: 0, marginLeft: 4 }}>
+            <button className="btn-icon" onClick={() => onEdit(product)} title="Editar">✏️</button>
+            <button className="btn-icon" onClick={() => onDelete(product.id)} title="Excluir">🗑️</button>
+          </div>
         </div>
-        <div className="flex gap-2" style={{ flexShrink: 0 }}>
-          <button className="btn-icon" onClick={() => onEdit(product)} title="Editar">✏️</button>
-          <button className="btn-icon" onClick={() => onDelete(product.id)} title="Excluir" style={{ color: 'var(--red)' }}>🗑️</button>
+        <div className="grid-3" style={{ gap: 4 }}>
+          <div className="mini-stat">
+            <p className="mini-stat-label">Custo</p>
+            <p className="mini-stat-value">R$ {parseFloat(product.custo || 0).toFixed(2)}</p>
+          </div>
+          <div className="mini-stat">
+            <p className="mini-stat-label">Shopee</p>
+            <p className="mini-stat-value">R$ {parseFloat(product.preco_shopee || 0).toFixed(2)}</p>
+          </div>
+          <div className="mini-stat">
+            <p className="mini-stat-label">Margem</p>
+            <p className="mini-stat-value" style={{ color: mgColor }}>{mg}%</p>
+          </div>
         </div>
+        <span style={{ fontSize: 10, color: 'var(--text3)' }}>
+          {[product.categoria, product.marca, product.estoque ? `${product.estoque} un` : null].filter(Boolean).join(' · ')}
+        </span>
       </div>
-      <div className="grid-3" style={{ gap: 8 }}>
-        <div className="mini-stat">
-          <p className="mini-stat-label">Custo</p>
-          <p className="mini-stat-value">R$ {parseFloat(product.custo || 0).toFixed(2)}</p>
-        </div>
-        <div className="mini-stat">
-          <p className="mini-stat-label">Shopee</p>
-          <p className="mini-stat-value">R$ {parseFloat(product.preco_shopee || 0).toFixed(2)}</p>
-        </div>
-        <div className="mini-stat">
-          <p className="mini-stat-label">Margem</p>
-          <p className="mini-stat-value" style={{ color: mgColor }}>{mg}%</p>
-        </div>
-      </div>
-      <span style={{ fontSize: 11, color: 'var(--text3)' }}>
-        {[product.categoria, product.marca, product.estoque ? `${product.estoque} un` : null].filter(Boolean).join(' · ')}
-      </span>
     </div>
   )
 }
@@ -330,7 +282,6 @@ export default function App() {
       foto_url: f.foto_url || null,
       margem_shopee: parseFloat(calcMargem(parseFloat(f.custo) || 0, parseFloat(f.preco_shopee) || 0)) || 0,
     }
-
     let error
     if (edit?.id) {
       ({ error } = await supabase.from('produtos').update(row).eq('id', edit.id))
@@ -365,17 +316,17 @@ export default function App() {
   })
 
   return (
-    <div style={{ padding: '20px', maxWidth: 860, margin: '0 auto' }}>
+    <div style={{ padding: '16px 24px', maxWidth: 1100, margin: '0 auto' }}>
       <Toast msg={msg} />
 
-      <div className="flex items-center" style={{ justifyContent: 'space-between', marginBottom: 18 }}>
+      <div className="flex items-center" style={{ justifyContent: 'space-between', marginBottom: 14 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 600 }}>📦 Shopee Manager</h1>
-          <p style={{ fontSize: 12, color: 'var(--text3)', marginTop: 2 }}>Cadastro e precificação de produtos</p>
+          <h1 style={{ fontSize: 18, fontWeight: 600 }}>📦 Shopee Manager</h1>
+          <p style={{ fontSize: 11, color: 'var(--text3)', marginTop: 1 }}>Gestão de produtos e precificação</p>
         </div>
         <div className="flex gap-2">
           <button className="btn btn-secondary btn-sm" onClick={exportCSV}>⬇ CSV</button>
-          <button className="btn btn-primary" onClick={() => { setView('form'); setEdit(null) }}>+ Novo produto</button>
+          <button className="btn btn-primary btn-sm" onClick={() => { setView('form'); setEdit(null) }}>+ Novo produto</button>
         </div>
       </div>
 
@@ -385,12 +336,12 @@ export default function App() {
         <>
           <Stats data={produtos} />
 
-          <div className="flex gap-2 items-center" style={{ margin: '14px 0', flexWrap: 'wrap' }}>
-            <div style={{ flex: 1, minWidth: 140 }}>
-              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar por nome ou SKU..." />
+          <div className="flex gap-2 items-center" style={{ margin: '10px 0', flexWrap: 'wrap' }}>
+            <div style={{ flex: 1, minWidth: 120 }}>
+              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar por nome ou SKU..." style={{ fontSize: 12 }} />
             </div>
             <div className="flex gap-2" style={{ flexWrap: 'wrap' }}>
-              {[['todos','Todos'],['pendente','Pendentes'],['pronto','Prontos'],['publicado','Publicados'],['lote1','Lote 1'],['lote2','Lote 2']].map(([k,l]) => (
+              {[['todos','Todos'],['pendente','Pendentes'],['pronto','Prontos'],['publicado','Publicados'],['lote1','L1'],['lote2','L2'],['lote3','L3']].map(([k,l]) => (
                 <button key={k} className={`filter-btn ${filter === k ? 'active' : ''}`} onClick={() => setFilter(k)}>{l}</button>
               ))}
             </div>
@@ -400,9 +351,9 @@ export default function App() {
             <div className="empty"><p>Carregando...</p></div>
           ) : filtered.length === 0 ? (
             <div className="empty">
-              <p style={{ fontSize: 36, marginBottom: 8 }}>📦</p>
-              <p>{produtos.length === 0 ? 'Nenhum produto cadastrado' : 'Nenhum resultado'}</p>
-              {produtos.length === 0 && <button className="btn btn-primary" style={{ marginTop: 12 }} onClick={() => setView('form')}>Cadastrar primeiro produto</button>}
+              <p style={{ fontSize: 28, marginBottom: 6 }}>📦</p>
+              <p style={{ fontSize: 13 }}>{produtos.length === 0 ? 'Nenhum produto cadastrado' : 'Nenhum resultado'}</p>
+              {produtos.length === 0 && <button className="btn btn-primary btn-sm" style={{ marginTop: 10 }} onClick={() => setView('form')}>Cadastrar primeiro produto</button>}
             </div>
           ) : (
             <div className="product-grid">
