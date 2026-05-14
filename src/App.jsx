@@ -240,7 +240,11 @@ function Card({ product, onEdit, onDelete }) {
           </div>
         </div>
         <span style={{ fontSize: 10, color: 'var(--text3)' }}>
-          {[product.categoria, product.marca, product.estoque ? `${product.estoque} un` : null].filter(Boolean).join(' · ')}
+         {product.categoria && <span>{product.categoria}</span>}
+{product.categoria && product.marca && ' · '}
+{product.marca && <span style={{ color: 'var(--red)', fontWeight: 400 }}>{product.marca}</span>}
+{(product.categoria || product.marca) && product.estoque ? ' · ' : ''}
+{product.estoque ? `${product.estoque} un` : ''}
         </span>
       </div>
     </div>
