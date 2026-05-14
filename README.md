@@ -57,5 +57,46 @@ npm run build
 Rodar o arquivo `supabase_schema.sql` no SQL Editor do Supabase para criar as tabelas.
 
 ## PRODUTOS ADICIONADOS AO DASHBOARD - CATEGORIAS:
+
 ✅ ACESSORIOS PARA VEICULOS
 ✅ AGRO
+
+Beleza e Cuidado Pessoal
+
+Calçados, Roupas e Bolsas
+
+Celulares e Telefones
+
+Câmeras e Acessórios
+
+Esportes e Fitness
+
+Festas e Lembrancinhas
+
+Indústria e Comércio
+
+Saúde
+
+
+============================
+TIAGO (9 categorias)
+=============================
+
+Antiguidades e Coleções
+
+Bebês
+
+Brinquedos e Hobbies
+
+Casa, Móveis e Decoração
+
+Construção
+
+Eletrodomésticos
+
+Eletrônicos, Áudio e Vídeo
+
+Ferramentas
+
+Informática
+
