@@ -242,7 +242,7 @@ function Card({ product, onEdit, onDelete }) {
         <span style={{ fontSize: 10, color: 'var(--text3)' }}>
          {product.categoria && <span>{product.categoria}</span>}
 {product.categoria && product.marca && ' · '}
-{product.marca && <span style={{ color: 'var(--red)', fontWeight: 400 }}>{product.marca}</span>}
+{product.marca && <span style={{ color: 'var(--red)', fontWeight: 600 }}>{product.marca}</span>}
 {(product.categoria || product.marca) && product.estoque ? ' · ' : ''}
 {product.estoque ? `${product.estoque} un` : ''}
         </span>
