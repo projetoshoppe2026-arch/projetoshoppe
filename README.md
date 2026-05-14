@@ -55,3 +55,7 @@ npm run build
 ## Banco de Dados
 
 Rodar o arquivo `supabase_schema.sql` no SQL Editor do Supabase para criar as tabelas.
+
+## PRODUTOS ADICIONADOS AO DASHBOARD - CATEGORIAS:
+✅ ACESSORIOS PARA VEICULOS
+✅ AGRO
