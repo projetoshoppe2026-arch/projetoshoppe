@@ -16,7 +16,7 @@
   --red-bg: #FCEBEB;
   --gray: #888780;
   --gray-bg: #F1EFE8;
-  --radius: 10px;
+  --radius: 8px;
   --font: 'DM Sans', -apple-system, sans-serif;
 }
 
@@ -38,8 +38,8 @@ input, select, textarea, button { font-family: var(--font); }
 
 input, select, textarea {
   width: 100%;
-  padding: 9px 12px;
-  border-radius: 8px;
+  padding: 7px 10px;
+  border-radius: 6px;
   border: 1px solid var(--border);
   background: var(--bg2);
   color: var(--text);
@@ -47,40 +47,39 @@ input, select, textarea {
   transition: border-color 0.15s;
   outline: none;
 }
-input:focus, select:focus, textarea:focus {
-  border-color: var(--green);
-}
+input:focus, select:focus, textarea:focus { border-color: var(--green); }
 select { appearance: auto; }
 textarea { resize: vertical; }
 
 .label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
   color: var(--text2);
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .btn {
-  padding: 9px 20px;
-  border-radius: 8px;
-  font-size: 13px;
+  padding: 7px 16px;
+  border-radius: 6px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   border: none;
   transition: opacity 0.15s;
 }
-.btn:hover { opacity: 0.9; }
+.btn:hover { opacity: 0.88; }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-primary { background: var(--green); color: #fff; }
 .btn-secondary { background: var(--bg2); color: var(--text2); border: 1px solid var(--border); }
-.btn-danger { background: var(--bg2); color: var(--red); border: 1px solid var(--border); }
-.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-sm { padding: 5px 10px; font-size: 11px; }
 .btn-icon {
-  width: 32px; height: 32px; border-radius: 6px;
+  width: 28px; height: 28px; border-radius: 5px;
   border: 1px solid var(--border); background: var(--bg2);
   cursor: pointer; display: flex; align-items: center; justify-content: center;
-  font-size: 16px; transition: background 0.15s;
+  font-size: 13px; transition: background 0.15s;
 }
 .btn-icon:hover { background: var(--bg3); }
 
@@ -88,36 +87,36 @@ textarea { resize: vertical; }
   background: var(--bg2);
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  padding: 16px;
+  padding: 12px;
 }
 
 .badge {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
-  padding: 2px 8px;
-  border-radius: 4px;
+  padding: 1px 7px;
+  border-radius: 3px;
   display: inline-block;
 }
 
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .flex { display: flex; }
-.gap-2 { gap: 8px; }
-.gap-3 { gap: 12px; }
+.gap-2 { gap: 6px; }
+.gap-3 { gap: 10px; }
 .items-center { align-items: center; }
 
 .toast {
   position: fixed;
-  top: 16px;
+  top: 12px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
-  padding: 10px 24px;
-  border-radius: 8px;
-  font-size: 13px;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-size: 12px;
   font-weight: 500;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
   animation: slideIn 0.3s ease;
 }
 .toast-ok { background: var(--green-bg); color: #0F6E56; border: 1px solid #5DCAA5; }
@@ -125,10 +124,10 @@ textarea { resize: vertical; }
 
 .margin-hint {
   display: flex;
-  gap: 16px;
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-size: 12px;
+  gap: 14px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 11px;
   flex-wrap: wrap;
 }
 .margin-ok { background: var(--green-bg); }
@@ -138,20 +137,20 @@ textarea { resize: vertical; }
 .stat-card {
   background: var(--bg2);
   border-radius: var(--radius);
-  padding: 14px 16px;
+  padding: 10px 12px;
   border: 1px solid var(--border);
   text-align: center;
 }
-.stat-value { font-size: 24px; font-weight: 500; margin: 0; }
-.stat-label { font-size: 11px; color: var(--text3); margin: 2px 0 0; }
+.stat-value { font-size: 20px; font-weight: 500; margin: 0; }
+.stat-label { font-size: 10px; color: var(--text3); margin: 2px 0 0; }
 
 .filter-btn {
-  padding: 6px 14px;
-  border-radius: 6px;
+  padding: 4px 12px;
+  border-radius: 5px;
   border: 1px solid var(--border);
   background: var(--bg2);
   color: var(--text2);
-  font-size: 12px;
+  font-size: 11px;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.15s;
@@ -162,45 +161,57 @@ textarea { resize: vertical; }
   font-weight: 500;
 }
 
+/* PRODUCT GRID — 3 colunas no desktop, 2 no tablet, 1 no mobile */
 .product-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
 .product-name {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  line-height: 1.3;
 }
 .product-sku {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text3);
   font-family: 'SF Mono', 'Fira Code', monospace;
 }
 .mini-stat {
   background: var(--bg3);
-  border-radius: 6px;
-  padding: 6px 10px;
+  border-radius: 5px;
+  padding: 4px 8px;
 }
-.mini-stat-label { font-size: 10px; color: var(--text3); }
-.mini-stat-value { font-size: 13px; font-weight: 500; }
+.mini-stat-label { font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.3px; }
+.mini-stat-value { font-size: 12px; font-weight: 500; }
 
 .empty {
   text-align: center;
-  padding: 48px 20px;
+  padding: 40px 20px;
   color: var(--text3);
 }
 
 @keyframes slideIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
+/* RESPONSIVO */
+@media (max-width: 1024px) {
+  .product-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (max-width: 640px) {
-  .grid-2, .grid-3, .product-grid { grid-template-columns: 1fr; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
   .grid-4 { grid-template-columns: 1fr 1fr; }
+  .product-grid { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 1200px) {
+  .product-grid { grid-template-columns: repeat(4, 1fr); }
 }
