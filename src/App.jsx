@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from './supabase'
 
 const STATUS = {
@@ -59,6 +59,8 @@ function Stats({ data }) {
 
 function Form({ product, onSave, onCancel, saving }) {
   const [f, setF] = useState(product || blank)
+  const [uploading, setUploading] = useState(false)
+  const fileRef = useRef(null)
   const set = (k, v) => setF(p => ({ ...p, [k]: v }))
   useEffect(() => { setF(product || blank) }, [product])
 
@@ -66,6 +68,32 @@ function Form({ product, onSave, onCancel, saving }) {
   const mg = calcMargem(parseFloat(f.custo) || 0, parseFloat(f.preco_shopee) || parseFloat(sug) || 0)
   const mgClass = parseFloat(mg) >= 15 ? 'margin-ok' : parseFloat(mg) >= 5 ? 'margin-warn' : 'margin-bad'
   const mgColor = parseFloat(mg) >= 15 ? '#0F6E56' : parseFloat(mg) >= 5 ? '#854F0B' : '#A32D2D'
+
+  const uploadFoto = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    const ext = file.name.split('.').pop()
+    const fileName = `${f.sku || Date.now()}_${Date.now()}.${ext}`
+    const { data, error } = await supabase.storage
+      .from('produto-fotos')
+      .upload(fileName, file, { upsert: true })
+    if (error) {
+      alert('Erro no upload: ' + error.message)
+      setUploading(false)
+      return
+    }
+    const { data: urlData } = supabase.storage
+      .from('produto-fotos')
+      .getPublicUrl(fileName)
+    set('foto_url', urlData.publicUrl)
+    setUploading(false)
+  }
+
+  const removeFoto = () => {
+    set('foto_url', '')
+    if (fileRef.current) fileRef.current.value = ''
+  }
 
   return (
     <div className="card" style={{ padding: 24 }}>
@@ -120,18 +148,77 @@ function Form({ product, onSave, onCancel, saving }) {
             </select>
           </div>
         </div>
-        <div><label className="label">URL da foto</label><input value={f.foto_url} onChange={e => set('foto_url', e.target.value)} placeholder="https://..." /></div>
-        {f.foto_url && (
-          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-            <img src={f.foto_url} alt="Preview" onError={e => e.target.style.display = 'none'}
-              style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--border)' }} />
-            <span style={{ fontSize: 12, color: 'var(--text3)' }}>Preview da foto</span>
-          </div>
-        )}
+
+        {/* FOTO: Upload ou URL */}
+        <div>
+          <label className="label">Foto do produto</label>
+          {f.foto_url ? (
+            <div style={{ display: 'flex', gap: 12, alignItems: 'center', padding: 12, background: 'var(--bg3)', borderRadius: 8 }}>
+              <img src={f.foto_url} alt="Preview"
+                onError={e => e.target.src = ''}
+                style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--border)' }} />
+              <div style={{ flex: 1 }}>
+                <p style={{ fontSize: 12, color: 'var(--text2)', margin: '0 0 8px', wordBreak: 'break-all' }}>
+                  {f.foto_url.length > 60 ? f.foto_url.slice(0, 60) + '...' : f.foto_url}
+                </p>
+                <button className="btn btn-secondary btn-sm" onClick={removeFoto}
+                  style={{ color: 'var(--red)', borderColor: 'var(--red)' }}>
+                  🗑️ Remover foto
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div style={{
+                border: '2px dashed var(--border)', borderRadius: 8, padding: 20,
+                textAlign: 'center', cursor: 'pointer', background: 'var(--bg3)',
+                transition: 'border-color 0.2s',
+              }}
+                onClick={() => fileRef.current?.click()}
+                onDragOver={e => { e.preventDefault(); e.currentTarget.style.borderColor = 'var(--green)' }}
+                onDragLeave={e => { e.currentTarget.style.borderColor = 'var(--border)' }}
+                onDrop={e => {
+                  e.preventDefault()
+                  e.currentTarget.style.borderColor = 'var(--border)'
+                  if (e.dataTransfer.files?.[0]) {
+                    const dt = new DataTransfer()
+                    dt.items.add(e.dataTransfer.files[0])
+                    fileRef.current.files = dt.files
+                    uploadFoto({ target: { files: [e.dataTransfer.files[0]] } })
+                  }
+                }}
+              >
+                {uploading ? (
+                  <p style={{ fontSize: 13, color: 'var(--text2)', margin: 0 }}>⏳ Enviando foto...</p>
+                ) : (
+                  <>
+                    <p style={{ fontSize: 24, margin: '0 0 4px' }}>📷</p>
+                    <p style={{ fontSize: 13, color: 'var(--text2)', margin: 0 }}>
+                      Clique ou arraste uma foto aqui
+                    </p>
+                    <p style={{ fontSize: 11, color: 'var(--text3)', margin: '4px 0 0' }}>
+                      JPG, PNG ou WEBP
+                    </p>
+                  </>
+                )}
+              </div>
+              <input ref={fileRef} type="file" accept="image/*" onChange={uploadFoto}
+                style={{ display: 'none' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+                <span style={{ fontSize: 11, color: 'var(--text3)' }}>ou cole uma URL</span>
+                <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+              </div>
+              <input value={f.foto_url} onChange={e => set('foto_url', e.target.value)}
+                placeholder="https://exemplo.com/foto.jpg" />
+            </div>
+          )}
+        </div>
+
         <div><label className="label">Notas</label><textarea value={f.notas} onChange={e => set('notas', e.target.value)} placeholder="Observações..." rows={2} /></div>
         <div className="flex gap-2" style={{ justifyContent: 'flex-end', marginTop: 4 }}>
           <button className="btn btn-secondary" onClick={onCancel}>Cancelar</button>
-          <button className="btn btn-primary" onClick={() => onSave(f)} disabled={!f.sku || !f.nome || saving}>
+          <button className="btn btn-primary" onClick={() => onSave(f)} disabled={!f.sku || !f.nome || saving || uploading}>
             {saving ? 'Salvando...' : product?.id ? 'Atualizar' : 'Cadastrar'}
           </button>
         </div>
@@ -147,10 +234,15 @@ function Card({ product, onEdit, onDelete }) {
 
   return (
     <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-      {product.foto_url && (
+      {product.foto_url ? (
         <img src={product.foto_url} alt={product.nome}
           onError={e => e.target.style.display = 'none'}
-          style={{ width: '100%', height: 140, objectFit: 'cover', borderRadius: 8, background: 'var(--bg3)' }} />
+          style={{ width: '100%', height: 160, objectFit: 'cover', borderRadius: 8, background: 'var(--bg3)' }} />
+      ) : (
+        <div style={{ width: '100%', height: 80, borderRadius: 8, background: 'var(--bg3)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, color: 'var(--text3)' }}>
+          📦
+        </div>
       )}
       <div className="flex" style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div style={{ flex: 1, minWidth: 0 }}>
