@@ -60,6 +60,7 @@ Rodar o arquivo `supabase_schema.sql` no SQL Editor do Supabase para criar as ta
 
 ✅ ACESSORIOS PARA VEICULOS
 ✅ AGRO
+✅ Festas e Lembrancinhas
 
 Beleza e Cuidado Pessoal
 
@@ -70,8 +71,6 @@ Celulares e Telefones
 Câmeras e Acessórios
 
 Esportes e Fitness
-
-Festas e Lembrancinhas
 
 Indústria e Comércio
 
