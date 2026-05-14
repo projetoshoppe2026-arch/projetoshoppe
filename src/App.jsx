@@ -9,9 +9,25 @@ const STATUS = {
 }
 
 const CATS = [
-  'Luvas Descartáveis', 'Carregadores e Acessórios', 'Beleza e Cuidado',
-  'Travesseiros', 'Perfumes', 'Projetores', 'Brinquedos RC',
-  'Eletrônicos', 'Bebê e Infantil', 'Ferramentas', 'Outro',
+  'Acessórios para Veículos',
+  'Agro',
+  'Antiguidades e Coleções',
+  'Bebês',
+  'Beleza e Cuidado Pessoal',
+  'Brinquedos e Hobbies',
+  'Calçados, Roupas e Bolsas',
+  'Casa, Móveis e Decoração',
+  'Celulares e Telefones',
+  'Construção',
+  'Câmeras e Acessórios',
+  'Eletrodomésticos',
+  'Eletrônicos, Áudio e Vídeo',
+  'Esportes e Fitness',
+  'Ferramentas',
+  'Festas e Lembrancinhas',
+  'Indústria e Comércio',
+  'Informática',
+  'Saúde',
 ]
 
 const blank = {
