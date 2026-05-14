@@ -18,7 +18,7 @@ const blank = {
   sku: '', nome: '', marca: '', categoria: '', custo: '',
   preco_ml: '', preco_shopee: '', estoque: '', peso_kg: '',
   dimensoes: '', ean_gtin: '', fornecedor: '', prazo_reposicao: 7,
-  status: 'pendente', lote: 1, notas: '',
+  status: 'pendente', lote: 1, notas: '', foto_url: '',
 }
 
 const calcPreco = (c, m = 0.20) => {
@@ -120,6 +120,14 @@ function Form({ product, onSave, onCancel, saving }) {
             </select>
           </div>
         </div>
+        <div><label className="label">URL da foto</label><input value={f.foto_url} onChange={e => set('foto_url', e.target.value)} placeholder="https://..." /></div>
+        {f.foto_url && (
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+            <img src={f.foto_url} alt="Preview" onError={e => e.target.style.display = 'none'}
+              style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--border)' }} />
+            <span style={{ fontSize: 12, color: 'var(--text3)' }}>Preview da foto</span>
+          </div>
+        )}
         <div><label className="label">Notas</label><textarea value={f.notas} onChange={e => set('notas', e.target.value)} placeholder="Observações..." rows={2} /></div>
         <div className="flex gap-2" style={{ justifyContent: 'flex-end', marginTop: 4 }}>
           <button className="btn btn-secondary" onClick={onCancel}>Cancelar</button>
@@ -139,6 +147,11 @@ function Card({ product, onEdit, onDelete }) {
 
   return (
     <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      {product.foto_url && (
+        <img src={product.foto_url} alt={product.nome}
+          onError={e => e.target.style.display = 'none'}
+          style={{ width: '100%', height: 140, objectFit: 'cover', borderRadius: 8, background: 'var(--bg3)' }} />
+      )}
       <div className="flex" style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div className="flex gap-2 items-center" style={{ marginBottom: 4 }}>
@@ -206,6 +219,7 @@ export default function App() {
       ean_gtin: f.ean_gtin || null, fornecedor: f.fornecedor || null,
       prazo_reposicao: parseInt(f.prazo_reposicao) || 7,
       status: f.status, lote: parseInt(f.lote) || 1, notas: f.notas || null,
+      foto_url: f.foto_url || null,
       margem_shopee: parseFloat(calcMargem(parseFloat(f.custo) || 0, parseFloat(f.preco_shopee) || 0)) || 0,
     }
 
